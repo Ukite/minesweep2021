@@ -1,0 +1,52 @@
+function easyClearArea(grid, row, col, numRows, numCols){
+    let count1 = 0;
+    for (let [arow, acol] of directions) {
+        let ambientRow = row + arow;
+        let ambientCol = col + acol;
+        if (ambientRow < 0 || ambientRow >= numRows || ambientCol < 0 || ambientCol >= numCols) {
+            continue;
+        }
+            // 遍历每个方向数值，
+        if (grid[ambientRow][ambientCol].count === -1) {
+            console.log("danger!", ambientRow, ambientCol);
+            count1 += 1;
+        }
+    }
+
+    if (grid[row][col].color = black) {
+        if (grid[row][col].count = count1) {
+        searchClearArea(grid, row, col, numRows, numCols)
+        }
+    }
+}
+
+function handler2(){
+                        easyClearArea(grid, i, j, numRows, numCols);
+                    }
+
+                    cellEl.addEventListener("dblclick", handler2)
+
+
+<script>
+function handler2() {
+    alert('Thanks!');
+  };
+
+elem.onclick = () => alert("Hello");
+elem.addEventListener("click", handler1); 
+
+cellEl.removeEventListener("click", handler2)  
+</script>
+
+
+  <input id="elem" type="button" value="Click me" href=/>
+  <script>
+    function handler2() {
+        alert('Thanks!');
+      };
+    
+    elem.onclick = () => alert("Hello");
+    elem.addEventListener("click", handler1); 
+    
+    cellEl.removeEventListener("click", handler2)  
+    </script>
