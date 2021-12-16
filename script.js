@@ -20,8 +20,11 @@ function renderBoard(numRows, numCols, grid) {            /* function可理解�
                 cellEl.classList.add("sweep");
             }
 
-            cellEl.addEventListener("contextmenu", handler)
-            // 右键可排雷，handler为对应处理方式
+            cellEl.addEventListener("contextmenu",handler)
+                board.oncontextmenu = function () {
+                    return false
+                }
+
 
             cellEl.addEventListener("click", (e)=> {      /* 设置点击的动作 */
                 if (grid[i][j].count === -1) {
