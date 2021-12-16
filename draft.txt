@@ -50,3 +50,76 @@ cellEl.removeEventListener("click", handler2)
     
     cellEl.removeEventListener("click", handler2)  
     </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    let btnEl = document.getElementById('div1');       /* 定义变量（从上述属性中提取） */
+            // let menuEl = document.getElementById('menu1');
+            btnEl.addEventListener('click',(e) => {
+                let btnEl = e.target;
+                let gpEl = document.getElementById('gamep')
+                btnEl.classList.toggle('toggle');        /* 进行点击动作时，button的属性后加toggle */
+                gpEl.classList.toggle('hidden');
+                // console.log('click!');
+            });      
+
+
+<div id="div1" class='button' >        
+    ABC
+    <div class='body hidden'>  
+    </div> 
+  </div>
+
+
+  gridCell.clear = true;
+                    gridCell.cellEl.classList.add("clear");
+
+
+                    // 在 document 上捕获...
+document.addEventListener("hello", function(event) { // (1)
+    alert("Hello from " + event.target.tagName); // Hello from H1
+  });
+
+  // ...在 elem 上 dispatch！
+  let event = new Event("hello", {bubbles: true}); // (2)
+  elem.dispatchEvent(event);
+
+  // 在 document 上的处理程序将被激活，并显示消息。
+
+
+  let grid = initialize(9, 9, 10);
+
+
+renderBoard(9, 9, grid);
+
+
+var btns = document.querySelector('.header button');
+var mine = null;
+var btnkey = 0;
+var headerArr = [
+    [9,9,10], [16,16,40], [30,30,99]
+]
+for (let i = 0; i < btnEl.length - 1; i++);
+    btns[i].onclick = function(){
+        btns[btnkey].className = '';
+        this.className = 'active';
+        mine = new Mine(...Grades[i]);
+        mine.init();
+
+        btnkey = i
+    }
+
+btns[0].onclick();
+btns[3].onclick = function(){
+    mine.init();
+}

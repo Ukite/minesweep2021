@@ -6,6 +6,13 @@ body {
     align-items: center;
     justify-content: center;
     margin: 0;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+.hidden{
+    display: none;
 }
 
 .game-pane {
@@ -43,9 +50,16 @@ body {
 }
 
 .sweep{
+    background-size: auto;
     background-color: black;
 }
 
 .cell.landmine.success {
     background-color: green;
+}
+
+.btn button {
+    padding: 5px 15px;
+    background-color: burlywood;
+    cursor: pointer;
 }

@@ -1,9 +1,10 @@
 
 
 
+
 function renderBoard(numRows, numCols, grid) {            /* function可理解为定义函数，括号内为参数 */
     let boardEl = document.querySelector("#board");       /* 盒子模型中的board属性 */
-
+    
     for (let i = 0; i < numRows; i++) {   
         let trEl = document.createElement("tr");          /* 创建变量并为其命名，tr为表中的一行 */
         for (let j = 0; j < numCols; j++) {
@@ -23,7 +24,7 @@ function renderBoard(numRows, numCols, grid) {            /* function可理解�
             cellEl.addEventListener("contextmenu",handler)
                 board.oncontextmenu = function () {
                     return false
-                }
+                }                                         /* 取消右击动作 */
 
 
             cellEl.addEventListener("click", (e)=> {      /* 设置点击的动作 */
@@ -36,16 +37,20 @@ function renderBoard(numRows, numCols, grid) {            /* function可理解�
                     searchClearArea(grid, i, j, numRows, numCols);
                 }                                         /* 若点击处数值为0，则可以清空  */
 
-                else if (grid[i][j].count > 0) {
+                if (grid[i][j].count > 0) {
                     grid[i][j].clear = true;              /* 先将其清空，后填入数值 */
                     cellEl.classList.add("clear");
                     grid[i][j].cellEl.innerText = grid[i][j].count;
-
                 }
 
                 checkAllClear(grid);
                 // cellEl.classList.add("clear");
-    
+            
+            cellEl.addEventListener("click",(e)=> {
+                if (grid[i][j].count > 0) {
+                    easyClearArea(grid, i, j, numRows, numCols);
+                }
+            })
 
             });
 
@@ -164,8 +169,48 @@ function searchClearArea(grid, row, col, numRows, numCols) {
     }
 }
 
+function easyClearArea(grid, row, col, numRows, numCols) {
 
 
+    for (let [drow, dcol] of directions) {         
+        let cellRow = row + drow;
+        let cellCol = col + dcol;
+        if (cellRow < 0 || cellRow >= numRows || cellCol < 0 || cellCol >= numCols) {
+            continue;
+        }                                          
+        let count1 = 0;
+        if (grid[cellRow][cellCol].count === -1) {
+            count1 += 1;
+        }
+            if (grid[row][col].count = count1)  {
+                for (let [drow, dcol] of directions) {        
+                    let cellRow = row + drow;
+                    let cellCol = col + dcol;
+                    if (cellRow < 0 || cellRow >= numRows || cellCol < 0 || cellCol >= numCols) {
+                        continue;
+                    }        
+
+                    let gridCell = grid[cellRow][cellCol];
+
+                    if (gridCell.count === 0) {
+                        gridCell.clear = true;
+                        gridCell.cellEl.classList.add("clear");
+                        easyClearArea(grid, cellRow, cellCol, numRows, numCols);
+                    }
+
+                    if (gridCell.count > 0) {
+                        gridCell.clear = true;
+                        gridCell.cellEl.classList.add("clear");                 
+                        gridCell.cellEl.innerText = gridCell.count;
+                    }
+                } 
+            }
+            }
+            // 这是一个计算出周围雷数量的循环
+        }
+    
+
+    
 
 
 function explode(grid, row, col, numRows, numCols) {
@@ -182,8 +227,11 @@ function explode(grid, row, col, numRows, numCols) {
                 cell.cellEl.classList.add('landmine');
             }
         }
-        
     }
+    alert("Game Over")    
+    board.onclick = function () {                       /* 无法使用 */
+        return false
+    }           
 }
 
 
@@ -208,14 +256,33 @@ function checkAllClear(grid) {
                 cell.cellEl.classList.add('landmine');
             }
 
-            cell.cellEl.classList.add("success");
-            // 想在游戏成功后取消点击动作
+            cell.cellEl.classList.add("success")
         }
     }
-     
+    alert("Win")
     return true;
 }
 
+let btnEl = document.querySelector('.header button');
+let mine = null;
+let btnkey = 0;
+const headerArr = [
+    [9,9,10], [16,16,40], [30,30,99]
+]
+for (let i = 0; i < btnEl.length - 1; i++);
+    btns[i].onclick = function(){
+        btns[btnkey].className = '';
+        this.className = 'active';
+        mine = new Mine(...Grades[i]);
+        mine.init();
+
+        btnkey = i
+    }
+
+btns[0].onclick();
+btns[3].onclick = function(){
+    mine.init();
+}
 
 let grid = initialize(9, 9, 10);
 
