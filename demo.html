@@ -4,10 +4,11 @@
 </head>
 <body>
   <div class='btn'>
-    <button class='active'>Junior</button>
-    <button>Medium</button>
-    <button>Senior</button>
-    <button>Restart</button>
+    <button class='active' id="junior" onclick="junior()">Junior</button>
+    <button id="medium" onclick="medium()">Medium</button>
+    <button id="senior" onclick="senior()">Senior</button>
+    <button id="restart" onclick="location=location">Restart</button>
+    <!-- onclick为给按钮添加点击事件，其中，restart的事件表示刷新 -->
   </div>
 
   <div class="game-pane">
@@ -15,7 +16,6 @@
     </table>
   </div>
   <script src="script.js"></script>
-  
 </body>
 </html>
 

@@ -2,66 +2,68 @@
 
 
 
-function renderBoard(numRows, numCols, grid) {            /* function可理解为定义函数，括号内为参数 */
-    let boardEl = document.querySelector("#board");       /* 盒子模型中的board属性 */
+    function renderBoard(numRows, numCols, grid) {            /* function可理解为定义函数，括号内为参数 */
+        let boardEl = document.querySelector("#board");      /* 盒子模型中的board属性 */
     
-    for (let i = 0; i < numRows; i++) {   
-        let trEl = document.createElement("tr");          /* 创建变量并为其命名，tr为表中的一行 */
-        for (let j = 0; j < numCols; j++) {
-            let cellEl = document.createElement("div");   /* cellel表示一个小块 */
-            cellEl.className = "cell";
-            grid[i][j].cellEl = cellEl;                   /* 为每个小格定义值（变量） */
+        for (let i = 0; i < numRows; i++) {
+            let trEl = document.createElement("tr");           /* 创建变量并为其命名，tr为表中的一行 */
+            for (let j = 0; j < numCols; j++) {
+                let cellEl = document.createElement("div");
+                cellEl.className = "cell";                 /* cellel表示一个小块 */
+                grid[i][j].cellEl = cellEl;              /* 为每个小格定义值（变量） */
+    
+                // if ( grid[i][j].count === -1) {
+                //     cellEl.innerText = "*";    
+                // } else {
+                //     cellEl.innerText = grid[i][j].count;
+                // }
+    
+                function handler(){
+                    cellEl.classList.toggle("sweep");
+                }
+        
+                cellEl.addEventListener("contextmenu",handler)     
+                    board.oncontextmenu = function () {
+                        return false
+                    }                                         /* 取消默认右击动作 */
 
-            // if ( grid[i][j].count === -1) {
-            //     cellEl.innerText = "*";    
-            // } else {
-            //     cellEl.innerText = grid[i][j].count;
-            // }
-            function handler(){
-                cellEl.classList.add("sweep");
+                cellEl.addEventListener("click", (e)=> {   /* 设置点击的动作 */
+                    if (grid[i][j].count === -1) {
+                        explode(grid, i, j, numRows, numCols)
+                        alert("Game Over"); 
+                        return;
+                    }                         /* 如果点击的是雷，则调用explode函数 */
+    
+                    if (grid[i][j].count === 0 ) {
+                        searchClearArea(grid, i, j, numRows, numCols);
+                          
+                    }                             /* 若点击处数值为0，则可以清空  */
+                    else if (grid[i][j].count > 0) {
+                        grid[i][j].clear = true;          /* 先将其清空，后填入数值 */
+                        cellEl.classList.add("clear");
+                        grid[i][j].cellEl.innerText = grid[i][j].count;
+                    }
+    
+                    checkAllClear(grid);
+                    // cellEl.classList.add("clear");
+
+                cellEl.addEventListener("click",(e)=> {
+                    if (grid[i][j].count > 0) {
+                        easyClearArea(grid, i, j, numRows, numCols);
+                    }
+                    })
+                    
+                });
+    
+                let tdEl = document.createElement("td");              /* td为表中的一列 */
+                tdEl.append(cellEl);
+    
+                trEl.append(tdEl);
             }
-
-            cellEl.addEventListener("contextmenu",handler)
-                board.oncontextmenu = function () {
-                    return false
-                }                                         /* 取消右击动作 */
-
-
-            cellEl.addEventListener("click", (e)=> {      /* 设置点击的动作 */
-                if (grid[i][j].count === -1) {
-                    explode(grid, i, j, numRows, numCols)
-                    return;
-                }                                         /* 如果点击的是雷，则调用explode函数 */
-
-                if (grid[i][j].count === 0 ) {
-                    searchClearArea(grid, i, j, numRows, numCols);
-                }                                         /* 若点击处数值为0，则可以清空  */
-
-                if (grid[i][j].count > 0) {
-                    grid[i][j].clear = true;              /* 先将其清空，后填入数值 */
-                    cellEl.classList.add("clear");
-                    grid[i][j].cellEl.innerText = grid[i][j].count;
-                }
-
-                checkAllClear(grid);
-                // cellEl.classList.add("clear");
-            
-            cellEl.addEventListener("click",(e)=> {
-                if (grid[i][j].count > 0) {
-                    easyClearArea(grid, i, j, numRows, numCols);
-                }
-            })
-
-            });
-
-            let tdEl = document.createElement("td");      /* td为表中的一列 */
-            tdEl.append(cellEl);
-
-            trEl.append(tdEl);
+            boardEl.append(trEl);
         }
-        boardEl.append(trEl);
     }
-}
+    
 
 const directions = [
     [-1, -1], [-1, 0], [-1, 1], // TL, TOP, TOP-RIGHT
@@ -169,9 +171,8 @@ function searchClearArea(grid, row, col, numRows, numCols) {
     }
 }
 
+
 function easyClearArea(grid, row, col, numRows, numCols) {
-
-
     for (let [drow, dcol] of directions) {         
         let cellRow = row + drow;
         let cellCol = col + dcol;
@@ -209,12 +210,11 @@ function easyClearArea(grid, row, col, numRows, numCols) {
             // 这是一个计算出周围雷数量的循环
         }
     
-
     
 
 
 function explode(grid, row, col, numRows, numCols) {
-    grid[row][col].cellEl.classList.add("exploded");         /* 添加explode样式 */
+    grid[row][col].cellEl.classList.toggle("exploded");         /* 添加explode样式 */
 
     for (let cellRow = 0; cellRow < numRows; cellRow++) {
         for (let cellCol = 0; cellCol < numCols; cellCol++) {
@@ -224,15 +224,12 @@ function explode(grid, row, col, numRows, numCols) {
             // 在雷爆破的同时，将其他非雷格清空
 
             if (cell.count === -1) {                        
-                cell.cellEl.classList.add('landmine');
+                cell.cellEl.classList.toggle('landmine');
             }
         }
-    }
-    alert("Game Over")    
-    board.onclick = function () {                       /* 无法使用 */
+    }                   
         return false
     }           
-}
 
 
 
@@ -253,38 +250,31 @@ function checkAllClear(grid) {
             let cell = gridRow[col];
 
             if (cell.count === -1) {
-                cell.cellEl.classList.add('landmine');
+                cell.cellEl.classList.toggle('landmine');
             }
 
-            cell.cellEl.classList.add("success")
+            cell.cellEl.classList.toggle("success")
+            cell.cellEl.classList.remove("landmine")
         }
     }
     alert("Win")
     return true;
 }
 
-let btnEl = document.querySelector('.header button');
-let mine = null;
-let btnkey = 0;
-const headerArr = [
-    [9,9,10], [16,16,40], [30,30,99]
-]
-for (let i = 0; i < btnEl.length - 1; i++);
-    btns[i].onclick = function(){
-        btns[btnkey].className = '';
-        this.className = 'active';
-        mine = new Mine(...Grades[i]);
-        mine.init();
 
-        btnkey = i
-    }
+let grid1 = initialize(9, 9, 9);
+let grid2 = initialize(16, 16, 40);
+let grid3 = initialize(16,25,88);
 
-btns[0].onclick();
-btns[3].onclick = function(){
-    mine.init();
+function junior(){
+    renderBoard(9, 9, grid1);
 }
 
-let grid = initialize(9, 9, 10);
+function medium(){
+    renderBoard(16,16,grid2);
+}
 
+function senior(){
+    renderBoard(16,25,grid3)
+}
 
-renderBoard(9, 9, grid);
