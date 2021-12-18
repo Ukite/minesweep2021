@@ -1,78 +1,69 @@
 
 
 
+function renderBoard(numRows, numCols, grid) {           /* function可理解为定义函数，括号内为参数 */
+    let boardEl = document.querySelector("#board");      /* 盒子模型中的board属性 */
 
-    function renderBoard(numRows, numCols, grid) {            /* function可理解为定义函数，括号内为参数 */
-        let boardEl = document.querySelector("#board");      /* 盒子模型中的board属性 */
-    
-        for (let i = 0; i < numRows; i++) {
-            let trEl = document.createElement("tr");           /* 创建变量并为其命名，tr为表中的一行 */
-            for (let j = 0; j < numCols; j++) {
-                let cellEl = document.createElement("div");
-                cellEl.className = "cell";                 /* cellel表示一个小块 */
-                grid[i][j].cellEl = cellEl;              /* 为每个小格定义值（变量） */
-    
-                // if ( grid[i][j].count === -1) {
-                //     cellEl.innerText = "*";    
-                // } else {
-                //     cellEl.innerText = grid[i][j].count;
-                // }
-    
-                function handler(){
-                    cellEl.classList.toggle("sweep");
-                }
-        
-                cellEl.addEventListener("contextmenu",handler)     
-                    board.oncontextmenu = function () {
-                        return false
-                    }                                         /* 取消默认右击动作 */
+    for (let i = 0; i < numRows; i++) {
+        let trEl = document.createElement("tr");           /* 创建变量并为其命名，tr为表中的一行 */
+        for (let j = 0; j < numCols; j++) {
+            let cellEl = document.createElement("div");
+            cellEl.className = "cell";                     /* cellel表示一个小块 */
+            grid[i][j].cellEl = cellEl;                    /* 为每个小格定义值（变量） */
 
-                cellEl.addEventListener("click", (e)=> {   /* 设置点击的动作 */
-                    if (grid[i][j].count === -1) {
-                        explode(grid, i, j, numRows, numCols)
-                        alert("Game Over"); 
-                        return;
-                    }                         /* 如果点击的是雷，则调用explode函数 */
-    
-                    if (grid[i][j].count === 0 ) {
-                        searchClearArea(grid, i, j, numRows, numCols);
-                          
-                    }                             /* 若点击处数值为0，则可以清空  */
-                    else if (grid[i][j].count > 0) {
-                        grid[i][j].clear = true;          /* 先将其清空，后填入数值 */
-                        cellEl.classList.add("clear");
-                        grid[i][j].cellEl.innerText = grid[i][j].count;
-                    }
-    
-                    checkAllClear(grid);
-                    // cellEl.classList.add("clear");
-
-                cellEl.addEventListener("click",(e)=> {
-                    if (grid[i][j].count > 0) {
-                        easyClearArea(grid, i, j, numRows, numCols);
-                    }
-                    })
-                    
-                });
-    
-                let tdEl = document.createElement("td");              /* td为表中的一列 */
-                tdEl.append(cellEl);
-    
-                trEl.append(tdEl);
+            // if ( grid[i][j].count === -1) {
+            //     cellEl.innerText = "*";    
+            // } else {
+            //     cellEl.innerText = grid[i][j].count;
+            // }
+            function handler(){
+                cellEl.classList.toggle("sweep");
             }
-            boardEl.append(trEl);
-        }
-    }
     
+            cellEl.addEventListener("contextmenu",handler)
+                board.oncontextmenu = function () {
+                    return false
+                }                                           /* 取消默认右击动作 */
+
+            cellEl.addEventListener("click", (e)=> {
+                if (grid[i][j].count === -1) {
+                    explode(grid, i, j, numRows, numCols)
+                    return;
+                }
+
+                if (grid[i][j].count === 0 ) {
+                    searchClearArea(grid, i, j, numRows, numCols);
+                } else if (grid[i][j].count > 0) {
+                    grid[i][j].clear = true;
+                    cellEl.classList.add("clear");
+                    grid[i][j].cellEl.innerText = grid[i][j].count;
+                }
+
+                checkAllClear(grid);
+                // cellEl.classList.add("clear");
+            })
+            cellEl.addEventListener("click",(e)=> {
+                easyClearArea(grid, i, j, numRows, numCols);
+            });
+            
+
+            let tdEl = document.createElement("td");          /* td为表中的一列 */
+            tdEl.append(cellEl);
+
+            trEl.append(tdEl);
+        }
+        boardEl.append(trEl);
+    }
+}
 
 const directions = [
     [-1, -1], [-1, 0], [-1, 1], // TL, TOP, TOP-RIGHT
     [0, -1], [0, 1],
     [1, -1], [1, 0], [1, 1],
-]
-
+    ]
+    
     // 创建方向函数，代表一个雷周围的八个方向，为其定义（方向数值）//
-
+    
 function initialize(numRows, numCols, numMines) {
     let grid = new Array(numRows);                         /* grid为小网格 */
     for (let i = 0; i < numRows; i++) {
@@ -84,7 +75,7 @@ function initialize(numRows, numCols, numMines) {
             };                       /* 为grid定义初始量，最初clear为false，表示未被点击（清理） */
         }
     }
-
+    
     let mines = [];
     for (let k = 0; k < numMines; k++) {
         let cellSn = Math.trunc(Math.random() * numRows * numCols);
@@ -92,15 +83,15 @@ function initialize(numRows, numCols, numMines) {
         // 这一步的目的时在盘面上随机分布雷，cellsn为名称
         let row = Math.trunc(cellSn / numCols);
         let col = cellSn % numCols;
-
+    
         // 此处目的是提取出雷的行、列坐标
-
+    
         console.log(cellSn, row, col);              /* 输出参数，相当于print */
-
+    
         grid[row][col].count = -1;
         mines.push([row, col]);                     /* 令有雷的格数值为-1，并为雷赋行列值 */
     }
-
+    
     // 计算有雷的周边为零的周边雷数
     for (let [row, col] of mines) {                    /* 从雷里定义值 */
         console.log("mine: ", row, col);
@@ -112,7 +103,7 @@ function initialize(numRows, numCols, numMines) {
             }                                          /* 若值符合上述条件则跳过，进行下一步 */
             if (grid[cellRow][cellCol].count === 0) {
                 console.log("target: ", cellRow, cellCol);
-
+    
                 let count = 0;
                 for (let [arow, acol] of directions) {
                     let ambientRow = cellRow + arow;
@@ -126,18 +117,18 @@ function initialize(numRows, numCols, numMines) {
                         count += 1;
                     }
                 }
-
+    
                 if (count > 0) {
                     grid[cellRow][cellCol].count = count;
                 }
             }
             // 这是一个计算出周围雷数量的循环
         }
-
+    
     }
-
+    
     // console.log(grid);
-
+    
     return grid;
 }
 
@@ -171,7 +162,6 @@ function searchClearArea(grid, row, col, numRows, numCols) {
     }
 }
 
-
 function easyClearArea(grid, row, col, numRows, numCols) {
     for (let [drow, dcol] of directions) {         
         let cellRow = row + drow;
@@ -190,15 +180,15 @@ function easyClearArea(grid, row, col, numRows, numCols) {
                     if (cellRow < 0 || cellRow >= numRows || cellCol < 0 || cellCol >= numCols) {
                         continue;
                     }        
-
+    
                     let gridCell = grid[cellRow][cellCol];
-
+    
                     if (gridCell.count === 0) {
                         gridCell.clear = true;
                         gridCell.cellEl.classList.add("clear");
                         easyClearArea(grid, cellRow, cellCol, numRows, numCols);
                     }
-
+    
                     if (gridCell.count > 0) {
                         gridCell.clear = true;
                         gridCell.cellEl.classList.add("clear");                 
@@ -206,32 +196,27 @@ function easyClearArea(grid, row, col, numRows, numCols) {
                     }
                 } 
             }
-            }
-            // 这是一个计算出周围雷数量的循环
-        }
+    }
+}
     
-    
-
-
 function explode(grid, row, col, numRows, numCols) {
     grid[row][col].cellEl.classList.toggle("exploded");         /* 添加explode样式 */
-
+            
     for (let cellRow = 0; cellRow < numRows; cellRow++) {
         for (let cellCol = 0; cellCol < numCols; cellCol++) {
             let cell =  grid[cellRow][cellCol];
             cell.clear = true;
             cell.cellEl.classList.add('clear');
-            // 在雷爆破的同时，将其他非雷格清空
-
+                    // 在雷爆破的同时，将其他非雷格清空
+            
             if (cell.count === -1) {                        
-                cell.cellEl.classList.toggle('landmine');
+                cell.cellEl.classList.add('landmine');
+                cell.cellEl.classList.toggle("sweep");
             }
         }
     }                   
         return false
-    }           
-
-
+} 
 
 function checkAllClear(grid) {
     for (let row = 0; row < grid.length; row ++) {
@@ -243,38 +228,44 @@ function checkAllClear(grid) {
             }
         }
     }
-
+            
     for (let row = 0; row < grid.length; row ++) {
         let gridRow = grid[row];
         for (let col = 0; col < gridRow.length; col ++) {
             let cell = gridRow[col];
-
             if (cell.count === -1) {
                 cell.cellEl.classList.toggle('landmine');
             }
-
-            cell.cellEl.classList.toggle("success")
+                        
             cell.cellEl.classList.remove("landmine")
+            cell.cellEl.classList.toggle("success")
         }
     }
-    alert("Win")
+    swal("Win")
     return true;
-}
+}        
 
 
-let grid1 = initialize(9, 9, 9);
-let grid2 = initialize(16, 16, 40);
-let grid3 = initialize(16,25,88);
 
-function junior(){
-    renderBoard(9, 9, grid1);
-}
 
-function medium(){
-    renderBoard(16,16,grid2);
-}
-
-function senior(){
-    renderBoard(16,25,grid3)
+function start() {
+    swal(document.getElementById("s").value)
+    switch (document.getElementById("s").value) {
+        case "Easy": {
+            grid = initialize(9,9,9); //初始化，得到二维数组
+            renderBoard(9,9,grid);
+            break;
+        }
+        case "Medium": { 
+            grid = initialize(16, 16, 40); //初始化，得到二维数组
+            renderBoard(16,16,grid);
+            break;
+        }
+        case "Hard": {
+            grids = initialize(16, 25, 88); //初始化，得到二维数组
+            renderBoard(16,25,grids);
+            break;
+        }
+    }
 }
 

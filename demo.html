@@ -1,21 +1,41 @@
 <html>
 <head>
+  <title>扫雷游戏</title>
+  <link rel="stylesheet" type="text/css" href="https://blog.huangwx.cn/css/sweetalert.css">
+  <script type="text/javascript" src="https://blog.huangwx.cn/js/sweetalert-dev.js"></script>
   <link rel="stylesheet" type="text/css" href="styles.css" />
 </head>
-<body>
-  <div class='btn'>
-    <button class='active' id="junior" onclick="junior()">Junior</button>
-    <button id="medium" onclick="medium()">Medium</button>
-    <button id="senior" onclick="senior()">Senior</button>
-    <button id="restart" onclick="location=location">Restart</button>
-    <!-- onclick为给按钮添加点击事件，其中，restart的事件表示刷新 -->
-  </div>
 
-  <div class="game-pane">
+<body>
+  <div>
+    <h1 style="color:#e9c150a1;">SweepMine2021</h1>
+  </div>
+<div class='p'>
+  <button onclick="start()">Start</button>
+  <button onclick="location=location">Restart</button>
+  <select id="s">
+      <option>--Please choose a difficulty degree--</option>
+      <option>Easy</option>
+      <option>Medium</option>
+      <option>Hard</option>
+  </select>
+</div>  
+
+
+<div class="game-pane">
     <table id="board">
     </table>
-  </div>
-  <script src="script.js"></script>
+</div>.
+
+<p1 style="padding: 5px; font-size: small;">
+  <ul>                      
+    <li>在下拉框中选择游戏等级，选择完毕之后点击“Start”开始游戏</li>
+    <li>游戏结束后点击“Restart”重新开始游戏</li> 
+  </ul>
+</p1>
+
+<script src="script.js"></script>
+
 </body>
 </html>
 
