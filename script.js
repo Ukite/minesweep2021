@@ -28,6 +28,7 @@ function renderBoard(numRows, numCols, grid) {           /* function可理解为
             cellEl.addEventListener("click", (e)=> {
                 if (grid[i][j].count === -1) {
                     explode(grid, i, j, numRows, numCols)
+                    swal("Game Over!")
                     return;
                 }
 
@@ -241,7 +242,7 @@ function checkAllClear(grid) {
             cell.cellEl.classList.toggle("success")
         }
     }
-    swal("Win")
+    swal("Win!")
     return true;
 }        
 
@@ -257,13 +258,13 @@ function start() {
             break;
         }
         case "Medium": { 
-            grid = initialize(16, 16, 40); //初始化，得到二维数组
-            renderBoard(16,16,grid);
+            grid = initialize(13, 13, 30); //初始化，得到二维数组
+            renderBoard(13,13,grid);
             break;
         }
         case "Hard": {
-            grids = initialize(16, 25, 88); //初始化，得到二维数组
-            renderBoard(16,25,grids);
+            grids = initialize(13, 20, 66); //初始化，得到二维数组
+            renderBoard(13,20,grids);
             break;
         }
     }
